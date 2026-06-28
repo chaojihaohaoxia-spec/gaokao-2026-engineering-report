@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
   <title>重庆2026物理类586分工科志愿复核报告</title>
   <style>
     :root {
@@ -18,13 +19,14 @@
       --green: #26734d;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.65; }
+    html { scroll-padding-top: 72px; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.65; overflow-x: hidden; }
     a { color: var(--blue); text-decoration: none; }
     header { background: #0f172a; color: #fff; padding: 44px min(6vw, 72px) 32px; }
     header h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 48px); letter-spacing: 0; }
     header p { margin: 6px 0; color: #dbe7ff; max-width: 1040px; }
-    nav { position: sticky; top: 0; z-index: 2; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); padding: 10px min(6vw, 72px); display: flex; gap: 14px; overflow-x: auto; }
-    nav a { white-space: nowrap; font-size: 14px; color: #1f2937; }
+    nav { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); padding: 10px min(6vw, 72px); display: flex; gap: 10px; overflow-x: auto; box-shadow: 0 8px 18px rgba(15,23,42,.06); }
+    nav a { white-space: nowrap; font-size: 14px; color: #1f2937; padding: 4px 8px; }
     main { padding: 0; }
     section { padding: 34px min(6vw, 72px); border-bottom: 1px solid var(--line); background: var(--paper); }
     section:nth-of-type(even) { background: #f9fbff; }
@@ -40,25 +42,61 @@
     .callout { border-left: 5px solid var(--red); background: #fff7f6; padding: 14px 16px; margin: 16px 0; }
     .ok { border-left-color: var(--green); background: #f2fbf6; }
     .warn { border-left-color: var(--amber); background: #fff8ed; }
-    .table-wrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--line); background: #fff; }
+    .tier-browser { background: #f5f8fd; }
+    .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 10px; max-width: 100%; }
+    .filter-btn { appearance: none; border: 1px solid #b9c6d8; background: #fff; color: #102a56; padding: 9px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--blue); }
+    .filter-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .card-count { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+    .tier-cards { display: grid; gap: 16px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+    .choice-card { border: 1px solid var(--line); border-left: 5px solid var(--blue); background: #fff; padding: 14px; border-radius: 8px; min-width: 0; overflow-wrap: anywhere; }
+    .choice-card[data-tier="稳妥"] { border-left-color: var(--green); }
+    .choice-card[data-tier="保底"] { border-left-color: var(--teal); }
+    .choice-card[data-tier="待核"] { border-left-color: var(--amber); }
+    .choice-card[data-tier="谨慎"] { border-left-color: var(--red); }
+    .choice-card.is-hidden { display: none; }
+    .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .pill { display: inline-flex; align-items: center; min-height: 26px; padding: 2px 9px; border-radius: 999px; background: #e8f0ff; color: #17427d; font-size: 13px; font-weight: 800; }
+    .pill.pending { background: #fff4d6; color: #8a4b00; }
+    .pill.avoid { background: #ffe8e4; color: #9b1c13; }
+    .campus { color: var(--muted); margin-top: -4px; }
+    dl { display: grid; grid-template-columns: 76px 1fr; gap: 6px 10px; margin: 10px 0 0; }
+    dt { color: var(--muted); font-weight: 800; }
+    dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+    .detail-table { margin-top: 14px; }
+    .detail-table summary { cursor: pointer; font-weight: 800; color: #123c73; padding: 10px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); background: #fff; max-width: 100%; width: 100%; }
     table { width: 100%; border-collapse: collapse; min-width: 900px; }
-    .wide table { min-width: 1500px; }
-    th, td { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: 10px 11px; vertical-align: top; font-size: 14px; }
-    th { position: sticky; top: 41px; background: #edf3ff; z-index: 1; text-align: left; color: #102a56; }
+    .wide table { min-width: 1280px; }
+    th, td { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: 10px 11px; vertical-align: top; font-size: 14px; overflow-wrap: anywhere; }
+    th { background: #edf3ff; text-align: left; color: #102a56; }
     tr:last-child td { border-bottom: 0; }
     td:last-child, th:last-child { border-right: 0; }
     .score { font-size: 22px; font-weight: 800; color: var(--blue); }
     .tag { display: inline-block; margin-top: 4px; padding: 2px 8px; background: #e8f0ff; color: #1d4f91; border-radius: 999px; font-size: 12px; }
-    .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 14px; }
-    .note { border: 1px solid var(--line); background: #fff; padding: 14px; }
-    .note p { font-size: 14px; margin: 6px 0; }
     .ranking { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 16px 0; max-width: 950px; }
     .bar { display: grid; grid-template-columns: 160px 1fr 82px; align-items: center; gap: 10px; font-size: 14px; }
-    .bar div:nth-child(2) { height: 14px; background: #e5e7eb; position: relative; }
-    .bar i { display: block; height: 14px; background: var(--teal); }
+    .bar div:nth-child(2) { height: 14px; background: #e5e7eb; position: relative; overflow: hidden; }
+    .bar i { display: block; height: 14px; background: var(--teal); max-width: 100%; }
     .small { color: var(--muted); font-size: 13px; }
     .cols { columns: 2 360px; column-gap: 28px; }
     footer { padding: 28px min(6vw, 72px); background: #0f172a; color: #dbe7ff; }
+    @media (max-width: 720px) {
+      header { padding: 28px 18px 22px; }
+      section { padding: 26px 16px; }
+      nav { padding: 8px 12px; }
+      h2 { font-size: 23px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .choice-card { padding: 13px; }
+      .filter-bar { gap: 8px; }
+      .filter-btn { flex: 1 1 calc(50% - 8px); padding: 9px 10px; }
+      dl { grid-template-columns: 1fr; gap: 2px; }
+      dt { margin-top: 8px; }
+      .bar { grid-template-columns: 110px 1fr 62px; }
+      table { min-width: 680px; }
+      .wide table { min-width: 960px; }
+    }
   </style>
 </head>
 <body>
@@ -68,7 +106,7 @@
   <p>考生：重庆物理类，586分，物理/化学/生物，男生，只考虑工科，不考虑中外合作、文社经管法外语教育艺术等方向。</p>
 </header>
 <nav>
-  <a href="#conclusion">结论</a><a href="#data">数据核验</a><a href="#excel">Excel审查</a><a href="#priority">专业优先级</a>
+  <a href="#conclusion">结论</a><a href="#tier-browser">分级按钮</a><a href="#data">数据核验</a><a href="#excel">Excel审查</a><a href="#priority">专业优先级</a>
   <a href="#reach">冲刺</a><a href="#stable">稳妥</a><a href="#safety">保底</a><a href="#avoid">谨慎</a><a href="#order">排序</a><a href="#summary">简单版</a>
 </nav>
 <main>
@@ -85,6 +123,473 @@
     <div class="callout warn"><b>最大风险：</b>热门信息类专业继续上涨，小计划专业波动大；机构表里不少“学校好但专业不适合”的选项要剔除。</div>
     <p>策略上，前段少量冲真正值得的强工科，中段集中放专业和城市都匹配的重邮/成信/浙江理工，后段用重庆理工的强应用工科做保底。不要拿材料、化工、过程装备、交通、医学信息工程、财经类数据科学去换一个看起来更响的学校名字。</p>
   </section>
+
+
+    <section id="tier-browser" class="tier-browser">
+      <h2>快速分级浏览</h2>
+      <p>先用按钮看分层，再决定是否展开后面的详细表格。默认显示全部推荐，点“冲刺/稳妥/保底/待核/谨慎”可以只看对应类别。</p>
+      <div class="filter-bar" role="group" aria-label="志愿分级筛选">
+        <button type="button" class="filter-btn active" data-filter="全部">全部</button>
+        <button type="button" class="filter-btn" data-filter="冲刺">冲刺</button>
+        <button type="button" class="filter-btn" data-filter="稳妥">稳妥</button>
+        <button type="button" class="filter-btn" data-filter="保底">保底</button>
+        <button type="button" class="filter-btn" data-filter="待核">待核</button>
+        <button type="button" class="filter-btn" data-filter="谨慎">谨慎/不建议</button>
+      </div>
+      <div class="card-count" aria-live="polite">当前显示全部条目</div>
+      <div id="tier-cards" class="tier-cards"><div class="card-grid">
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 1</span>
+                <span class="score">86</span>
+              </div>
+              <h4>重庆邮电大学｜计算机科学与技术</h4>
+              <p class="campus">重庆南岸/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:13287；2024:同类14392；2023:同类14664</dd>
+                <dt>评级/排名</dt><dd>信息与通信、计算机是学校核心板块；学科评估中计算机科学与技术为B+，软科计算机相关学科前12%。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a>、<a href="https://www.dxsbb.com/news/73477.html" target="_blank" rel="noopener">重庆邮电学科评估</a></dd>
+                <dt>推荐逻辑</dt><dd>专业质量强，方向最贴合第一优先级；586/18162比近三年最低位次低约3500-5000位，只能少量冲。</dd>
+                <dt>风险</dt><dd>热门专业位次上行概率大；2024/2023为专业类口径，不能机械等同；失败风险高。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 2</span>
+                <span class="score">90</span>
+              </div>
+              <h4>重庆邮电大学｜通信与信息类</h4>
+              <p class="campus">重庆南岸/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:13949；2024:15413；2023:15839</dd>
+                <dt>评级/排名</dt><dd>软科显示通信工程A第12、电子信息工程A第31；学校信息通信工程底盘强，是重邮最有标识度的方向。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></dd>
+                <dt>推荐逻辑</dt><dd>比单纯冲985/211冷门专业更有逻辑，专业和学校强项高度一致。</dd>
+                <dt>风险</dt><dd>仍高于考生位次约2300-4200位；大类内分流要核具体包含专业。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 3</span>
+                <span class="score">86</span>
+              </div>
+              <h4>重庆邮电大学｜智能技术类</h4>
+              <p class="campus">重庆南岸/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:14652；2024:同类14392/16864；2023:同类14664/17392</dd>
+                <dt>评级/排名</dt><dd>软科可核智能科学与技术A第13、数据科学与大数据技术A第35；学校计算机/通信平台能支撑AI方向。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></dd>
+                <dt>推荐逻辑</dt><dd>属于可以冲的热门工科大类，比经管包装的数据类更接近真实工程。</dd>
+                <dt>风险</dt><dd>专业类口径变化大；若类内含不想读方向，排序应低于通信/计算机。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 4</span>
+                <span class="score">84</span>
+              </div>
+              <h4>西南石油大学｜电气工程及其自动化</h4>
+              <p class="campus">成都/成都校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:14652；2024:16151；2023:17392</dd>
+                <dt>评级/排名</dt><dd>CNUR电气工程及其自动化B+第121；学校虽有石油行业底色，但电气方向通用就业面更宽。<br><a href="https://www.dakao100.com/article_94823909058.html" target="_blank" rel="noopener">西南石油重庆录取</a>、<a href="https://www.cnur.com/major/2543.html" target="_blank" rel="noopener">CNUR电气工程</a>、<a href="https://www.dakao100.com/article_60620.html" target="_blank" rel="noopener">西南石油专业排名</a></dd>
+                <dt>推荐逻辑</dt><dd>电气属于第一优先级，三年位次从17392抬到14652，说明热度上行但仍不是完全没机会。</dd>
+                <dt>风险</dt><dd>2025位次高于考生约3500位，属于冲刺；学校行业标签偏能源，不能把它当纯电力强校。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 5</span>
+                <span class="score">84</span>
+              </div>
+              <h4>浙江工业大学｜机器人工程</h4>
+              <p class="campus">杭州/朝晖校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:594分约13602；2024:589分约16864；2023:551分约19711</dd>
+                <dt>评级/排名</dt><dd>CNUR机器人工程A第32；学校工科底盘较强，杭州制造业数字化和机器人生态较好。<br><a href="https://zs.zjut.edu.cn/jsp/lnzssearch.jsp" target="_blank" rel="noopener">浙江工业历年录取系统</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a></dd>
+                <dt>推荐逻辑</dt><dd>城市、专业、学校工科氛围都好，值得作为高质量冲刺。</dd>
+                <dt>风险</dt><dd>2025突然抬到约13602位，且招生少，波动风险很高；不能把2023低位当常态。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 6</span>
+                <span class="score">82</span>
+              </div>
+              <h4>江苏大学｜机械电子工程</h4>
+              <p class="campus">江苏镇江/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:589分约15346；2024:585分约18320；2023:未查到同名可比数据</dd>
+                <dt>评级/排名</dt><dd>机械工程学科评估B+；CNUR机械电子工程A、前10%，约第9。<br><a href="https://zb.ujs.edu.cn/info/1138/15458.htm" target="_blank" rel="noopener">江苏大学2025录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/13668.htm" target="_blank" rel="noopener">江苏大学2024录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/11738.htm" target="_blank" rel="noopener">江苏大学2023录取</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></dd>
+                <dt>推荐逻辑</dt><dd>适合能接受机械电子、愿意做智能制造/机电控制的学生。</dd>
+                <dt>风险</dt><dd>招生3人，大小年风险极高；如果只想电子信息/计算机，应放在重邮之后。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="冲刺">
+              <div class="card-top">
+                <span class="pill">冲刺 7</span>
+                <span class="score">80</span>
+              </div>
+              <h4>江苏大学｜机械设计制造及其自动化</h4>
+              <p class="campus">江苏镇江/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:590分约14988；2024:590分约16513；2023:556分约18037</dd>
+                <dt>评级/排名</dt><dd>机械工程学科评估B+，传统机械强校；机械类专业在第三方/软科口径中处于A类区间。<br><a href="https://zb.ujs.edu.cn/info/1138/15458.htm" target="_blank" rel="noopener">江苏大学2025录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/13668.htm" target="_blank" rel="noopener">江苏大学2024录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/11738.htm" target="_blank" rel="noopener">江苏大学2023录取</a></dd>
+                <dt>推荐逻辑</dt><dd>若能接受第二优先级机械方向，这是比“冷门211工科”更实在的冲刺。</dd>
+                <dt>风险</dt><dd>不是第一优先级；招生数小；本科就业质量更依赖个人实践和考研。</dd>
+              </dl>
+            </article>
+            </div><div class="card-grid">
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 1</span>
+                <span class="score">88</span>
+              </div>
+              <h4>重庆邮电大学｜电子工程类</h4>
+              <p class="campus">重庆南岸/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:18260；2024:18694；2023:集成电路与电子工程类20706</dd>
+                <dt>评级/排名</dt><dd>重邮电子信息工程软科A第31，信息通信和电子信息是学校核心工科平台。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></dd>
+                <dt>推荐逻辑</dt><dd>位次几乎贴合586/18162，是最核心的稳妥选择之一。</dd>
+                <dt>风险</dt><dd>必须核大类具体专业和分流规则；若不含目标电子信息方向，排序下调。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 2</span>
+                <span class="score">89</span>
+              </div>
+              <h4>重庆邮电大学｜软件工程</h4>
+              <p class="campus">重庆南岸/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:19815；2024:20262；2023:20706</dd>
+                <dt>评级/排名</dt><dd>软科软件工程A第42；重邮软件、计算机和通信平台叠加，就业方向清楚。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></dd>
+                <dt>推荐逻辑</dt><dd>考生位次优于近三年最低位次，专业热度高但录取匹配好。</dd>
+                <dt>风险</dt><dd>学费和培养模式需核；软件工程学习强度高，不能只看专业名。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 3</span>
+                <span class="score">83</span>
+              </div>
+              <h4>重庆邮电大学｜机器人工程</h4>
+              <p class="campus">重庆南岸/校本部</p>
+              <dl>
+                <dt>位次</dt><dd>2025:19441；2024:19519；2023:智能制造与机器人类23650/相关20043</dd>
+                <dt>评级/排名</dt><dd>CNUR机器人工程B+第54；控制/智能相关学科有支撑。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></dd>
+                <dt>推荐逻辑</dt><dd>位次匹配，专业方向符合第一优先级后段。</dd>
+                <dt>风险</dt><dd>机器人本科口径偏宽，若课程偏机械/控制，未来最好通过项目或考研增强竞争力。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 4</span>
+                <span class="score">82</span>
+              </div>
+              <h4>西南石油大学｜机器人工程</h4>
+              <p class="campus">成都/成都校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:17490；2024:19109；2023:19711</dd>
+                <dt>评级/排名</dt><dd>CNUR机器人工程B+，学校机械/能源装备背景可支撑机器人应用方向。<br><a href="https://www.dakao100.com/article_94823909058.html" target="_blank" rel="noopener">西南石油重庆录取</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a>、<a href="https://www.dakao100.com/article_60620.html" target="_blank" rel="noopener">西南石油专业排名</a></dd>
+                <dt>推荐逻辑</dt><dd>位次贴近且略优于18162，专业方向符合第一优先级后段，比冷门石油/地质方向更适合。</dd>
+                <dt>风险</dt><dd>2026计划可能只有4人，小计划波动很大；机器人方向本科就业需要项目能力支撑。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 5</span>
+                <span class="score">84</span>
+              </div>
+              <h4>成都信息工程大学｜电子信息工程</h4>
+              <p class="campus">成都/航空港校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:公开聚合约19441，待官方更新；2024:582分约19519；2023:550分约20043</dd>
+                <dt>评级/排名</dt><dd>软科显示电子信息工程A第51；学校信息类和电子工程学院专业口径清楚。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chengdu-university-of-information-technology" target="_blank" rel="noopener">成都信息工程软科</a></dd>
+                <dt>推荐逻辑</dt><dd>城市和专业都匹配，录取位次略低于考生位次，是稳妥核心备选。</dd>
+                <dt>风险</dt><dd>2026计划只有7人，小样本会放大波动；2025明细需等学校历史库更新核验。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 6</span>
+                <span class="score">82</span>
+              </div>
+              <h4>成都信息工程大学｜电子信息科学与技术</h4>
+              <p class="campus">成都/航空港校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:公开聚合约19441，待官方更新；2024:583分约19109；2023:551分约19711</dd>
+                <dt>评级/排名</dt><dd>软科显示电子信息科学与技术B+第34；电子工程学院办学，方向偏电子信息和光电/信号。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chengdu-university-of-information-technology" target="_blank" rel="noopener">成都信息工程软科</a></dd>
+                <dt>推荐逻辑</dt><dd>专业实力、城市和录取匹配度均衡。</dd>
+                <dt>风险</dt><dd>招生6人，波动风险高；与电子信息工程相比，岗位识别度略弱。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 7</span>
+                <span class="score">82</span>
+              </div>
+              <h4>成都信息工程大学｜网络工程</h4>
+              <p class="campus">成都/航空港校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:公开聚合约21426，待官方更新；2024:578分约21039；2023:547分约21046</dd>
+                <dt>评级/排名</dt><dd>软科显示网络工程A第22，CNUR显示B+第62；网络空间安全学院办学，就业方向清楚。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.cnur.com/major/3148.html" target="_blank" rel="noopener">CNUR网络工程</a></dd>
+                <dt>推荐逻辑</dt><dd>考生位次明显优于近两年最低位次，是较好的稳妥偏安全项。</dd>
+                <dt>风险</dt><dd>计划仅4人，必须防波动；网络工程不同于网络空间安全，课程偏网络系统和工程实现。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="稳妥">
+              <div class="card-top">
+                <span class="pill">稳妥 8</span>
+                <span class="score">80</span>
+              </div>
+              <h4>浙江理工大学｜机械电子工程</h4>
+              <p class="campus">杭州/下沙校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:公开聚合约18260；2024:约19881；2023:约20043，需在官方查询系统复核</dd>
+                <dt>评级/排名</dt><dd>机械电子工程A类、第三方榜单前10%；杭州城市产业强，机电、自动化和智能制造场景丰富。<br><a href="https://zs.zstu.edu.cn/info/1038/3883.htm" target="_blank" rel="noopener">浙江理工录取入口</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></dd>
+                <dt>推荐逻辑</dt><dd>如果接受第二优先级机械电子，这是城市和专业都较均衡的稳妥项。</dd>
+                <dt>风险</dt><dd>录取数据需在浙江理工官方查询系统逐项核；专业不是计算机/通信主线。</dd>
+              </dl>
+            </article>
+            </div><div class="card-grid">
+            <article class="choice-card" data-tier="保底">
+              <div class="card-top">
+                <span class="pill">保底 1</span>
+                <span class="score">86</span>
+              </div>
+              <h4>重庆理工大学｜机械电子工程</h4>
+              <p class="campus">重庆/两江校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:32804；2024:37057；2023:39688</dd>
+                <dt>评级/排名</dt><dd>软科口径机械电子工程A第31，CNUR口径B+第46；学校机械与车辆方向有基础。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></dd>
+                <dt>推荐逻辑</dt><dd>考生位次明显优于近三年最低位次，安全性高且专业不差。</dd>
+                <dt>风险</dt><dd>不是第一优先级；两江校区与花溪校区资源差异需核；本科就业要靠项目经验。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="保底">
+              <div class="card-top">
+                <span class="pill">保底 2</span>
+                <span class="score">84</span>
+              </div>
+              <h4>重庆理工大学｜智能车辆工程</h4>
+              <p class="campus">重庆/两江校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:31746；2024:35590；2023:37366</dd>
+                <dt>评级/排名</dt><dd>智能车辆工程B+第11；学校车辆行业背景清楚。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2733.html" target="_blank" rel="noopener">CNUR智能车辆工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></dd>
+                <dt>推荐逻辑</dt><dd>安全边际大，方向比传统车辆更贴近电控、智能化。</dd>
+                <dt>风险</dt><dd>车辆方向有周期性；如果学生排斥汽车行业，则不应作为核心保底。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="保底">
+              <div class="card-top">
+                <span class="pill">保底 3</span>
+                <span class="score">83</span>
+              </div>
+              <h4>重庆理工大学｜电气工程及其自动化</h4>
+              <p class="campus">重庆/花溪校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:24396；2024:26509；2023:28698</dd>
+                <dt>评级/排名</dt><dd>CNUR电气工程及其自动化B第228；工科就业方向清晰，适合电气、电控、制造业自动化。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2543.html" target="_blank" rel="noopener">CNUR电气工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></dd>
+                <dt>推荐逻辑</dt><dd>位次安全，专业接受度高，是保底里更适合家长理解的一项。</dd>
+                <dt>风险</dt><dd>若目标是国家电网核心岗位，本科院校层级不算强；需要考研或提高证书/实践竞争力。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="保底">
+              <div class="card-top">
+                <span class="pill">保底 4</span>
+                <span class="score">81</span>
+              </div>
+              <h4>重庆理工大学｜车辆工程</h4>
+              <p class="campus">重庆/两江校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:28271；2024:30664；2023:31976</dd>
+                <dt>评级/排名</dt><dd>车辆工程为学校传统优势方向；第三方评级可核为B及以上区间。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2734.html" target="_blank" rel="noopener">CNUR车辆工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></dd>
+                <dt>推荐逻辑</dt><dd>作为保底比材料、化工、土木等方向更可控。</dd>
+                <dt>风险</dt><dd>传统车辆不等于自动驾驶；若只想计算机/电子，应放在电气和机械电子之后。</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="保底">
+              <div class="card-top">
+                <span class="pill">保底 5</span>
+                <span class="score">79</span>
+              </div>
+              <h4>重庆理工大学｜物联网工程</h4>
+              <p class="campus">重庆/两江校区</p>
+              <dl>
+                <dt>位次</dt><dd>2025:28751；2024:29235；2023:30304</dd>
+                <dt>评级/排名</dt><dd>CNUR物联网工程B第126；方向贴近嵌入式、网络、传感和应用开发。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/3130.html" target="_blank" rel="noopener">CNUR物联网工程</a></dd>
+                <dt>推荐逻辑</dt><dd>分数安全，专业方向比纯管理类数据专业更贴近工科。</dd>
+                <dt>风险</dt><dd>招生32人不算大；学校计算机平台不如重邮，不能把它当强计算机替代。</dd>
+              </dl>
+            </article>
+            </div><div class="card-grid">
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>重庆邮电大学｜集成电路类</h4>
+              <dl>
+                <dt>保留价值</dt><dd>2025位次17490、城市和电子信息平台都好，方向符合第一优先级</dd>
+                <dt>缺什么</dt><dd>独立专业评级暂未稳定核到B及以上；需核2026大类包含专业和分流规则</dd>
+                <dt>处理</dt><dd>只要核到B以上，可插入稳妥前段；未核前不进主表</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>中国计量大学｜测控技术与仪器/智能感知工程</h4>
+              <dl>
+                <dt>保留价值</dt><dd>杭州；仪器方向强，测控A、智能感知B+可核</dd>
+                <dt>缺什么</dt><dd>重庆2026专业计划和近三年专业位次仍需在官方系统补齐</dd>
+                <dt>处理</dt><dd>若计划稳定，可作为稳妥后段</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>湖北工业大学｜电气工程及其自动化</h4>
+              <dl>
+                <dt>保留价值</dt><dd>武汉；机构表位次约19815/21039/22909，第三方评级B+</dd>
+                <dt>缺什么</dt><dd>软科或学校官方专业评级需复核，不能只靠机构表</dd>
+                <dt>处理</dt><dd>待核后可进稳妥</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>上海海事大学｜机械电子工程</h4>
+              <dl>
+                <dt>保留价值</dt><dd>上海临港，机电方向B+，城市资源好</dd>
+                <dt>缺什么</dt><dd>招生少，专业和学校行业偏航运，需要确认是否接受</dd>
+                <dt>处理</dt><dd>待核后可少量放稳妥</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>南通大学｜物联网工程/通信工程</h4>
+              <dl>
+                <dt>保留价值</dt><dd>长三角；部分专业B/B+</dd>
+                <dt>缺什么</dt><dd>校区启东/啬园切换，城市和学校工科平台不如重邮/成信</dd>
+                <dt>处理</dt><dd>可作保底扩展</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>北京联合大学｜计算机科学与技术</h4>
+              <dl>
+                <dt>保留价值</dt><dd>北京城市，位次安全性较高</dd>
+                <dt>缺什么</dt><dd>学校层级和专业平台一般，评级来源需复核</dd>
+                <dt>处理</dt><dd>只作保底扩展</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>重庆交通大学｜机械设计制造及其自动化</h4>
+              <dl>
+                <dt>保留价值</dt><dd>重庆本地，位次安全</dd>
+                <dt>缺什么</dt><dd>学校强项偏交通土木，非电子信息主线</dd>
+                <dt>处理</dt><dd>只在保底不足时考虑</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>河海大学｜交通工程</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>211、学校名气好，专业评级A</dd>
+                <dt>问题</dt><dd>不是目标优先级；交通工程就业/深造路径窄，且有校区流转和计划2人风险。</dd>
+                <dt>结论</dt><dd>不彻底排除，但不建议冲</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>中国石油大学(北京)｜过程装备与控制工程</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>211、评级B+</dd>
+                <dt>问题</dt><dd>过程装备偏石化装备，行业窄，不适合只想电子信息/计算机/智能制造的目标。</dd>
+                <dt>结论</dt><dd>建议排除</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>重庆邮电大学｜医学信息工程</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>重邮平台好，评级高</dd>
+                <dt>问题</dt><dd>医学信息工程就业口径不如计算机/软件/电子明确，用户已列入谨慎专业。</dd>
+                <dt>结论</dt><dd>建议排除</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>重庆邮电大学｜数据科学与大数据技术+经济学联合</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>分数和评级好看</dd>
+                <dt>问题</dt><dd>联合经济学，容易偏离纯工科；不是不能读，但不应压过软件/电子/通信。</dd>
+                <dt>结论</dt><dd>不优先</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>成都理工大学｜数字媒体技术</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>名字热门、城市成都</dd>
+                <dt>问题</dt><dd>数字媒体偏交互/内容技术，不是本次核心工科方向，且需看具体校区。</dd>
+                <dt>结论</dt><dd>不优先</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>西南大学/南京工业/江苏大学等｜材料、化工、无机非金属</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>学校层级或学科看起来不错</dd>
+                <dt>问题</dt><dd>与家庭明确偏好不匹配，就业和转方向成本较高。</dd>
+                <dt>结论</dt><dd>建议排除</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>财经/经贸类院校｜数据科学与大数据技术</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>专业名含数据</dd>
+                <dt>问题</dt><dd>学校平台偏财经，经管包装风险高，不符合工科强专业逻辑。</dd>
+                <dt>结论</dt><dd>建议排除</dd>
+              </dl>
+            </article>
+
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>北方工业大学｜电气工程及其自动化</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>北京城市+评级B+</dd>
+                <dt>问题</dt><dd>2026机构表计划仅1人，近年位次远高于18162，性价比不高。</dd>
+                <dt>结论</dt><dd>只可极少量冲，不建议主冲</dd>
+              </dl>
+            </article>
+            </div></div>
+    </section>
+
 
   <section id="data">
     <h2>2. 数据核验结果</h2>
@@ -123,190 +628,27 @@
   <section id="reach">
     <h2>5. 冲刺志愿清单</h2>
     <p>冲刺只放“冲上了值得读”的专业，不用冷门工科冲学校名气。</p>
-    <div class="table-wrap wide"><table><thead><tr><th>排序</th><th>学校</th><th>城市/校区</th><th>专业/专业类</th><th>2023-2025重庆物理类录取位次</th><th>2026招生计划</th><th>专业实力依据</th><th>城市就业逻辑</th><th>推荐理由</th><th>风险提示</th><th>综合评分</th></tr></thead><tbody><tr><td>1</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>计算机科学与技术</td><td>2025:13287；2024:同类14392；2023:同类14664</td><td>暂未查到可靠公开2026分专业计划；2025普通类117人</td><td>信息与通信、计算机是学校核心板块；学科评估中计算机科学与技术为B+，软科计算机相关学科前12%。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a>、<a href="https://www.dxsbb.com/news/73477.html" target="_blank" rel="noopener">重庆邮电学科评估</a></td><td>重庆本地数字产业、通信运营商、软件企业和成渝就业半径都匹配。</td><td>专业质量强，方向最贴合第一优先级；586/18162比近三年最低位次低约3500-5000位，只能少量冲。</td><td>热门专业位次上行概率大；2024/2023为专业类口径，不能机械等同；失败风险高。</td><td><span class="score">86</span><br><span class="tag">高风险冲刺</span></td></tr><tr><td>2</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>通信与信息类</td><td>2025:13949；2024:15413；2023:15839</td><td>暂未查到可靠公开2026计划；2025普通类266人</td><td>软科显示通信工程A第12、电子信息工程A第31；学校信息通信工程底盘强，是重邮最有标识度的方向。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>通信、设备、运营商、ICT集成、车联网和成渝电子信息产业都能承接。</td><td>比单纯冲985/211冷门专业更有逻辑，专业和学校强项高度一致。</td><td>仍高于考生位次约2300-4200位；大类内分流要核具体包含专业。</td><td><span class="score">90</span><br><span class="tag">值得冲</span></td></tr><tr><td>3</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>智能技术类</td><td>2025:14652；2024:同类14392/16864；2023:同类14664/17392</td><td>暂未查到可靠公开2026计划；2025普通类166人</td><td>软科可核智能科学与技术A第13、数据科学与大数据技术A第35；学校计算机/通信平台能支撑AI方向。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆和成都都有智能网联、工业软件、AI应用岗位，但本科就业仍需项目和算法/开发能力。</td><td>属于可以冲的热门工科大类，比经管包装的数据类更接近真实工程。</td><td>专业类口径变化大；若类内含不想读方向，排序应低于通信/计算机。</td><td><span class="score">86</span><br><span class="tag">冲刺</span></td></tr><tr><td>4</td><td>西南石油大学</td><td>成都/成都校区</td><td>电气工程及其自动化</td><td>2025:14652；2024:16151；2023:17392</td><td>暂未查到可靠公开2026计划；机构表列2026计划14人，需以重庆系统核</td><td>CNUR电气工程及其自动化B+第121；学校虽有石油行业底色，但电气方向通用就业面更宽。<br><a href="https://www.dakao100.com/article_94823909058.html" target="_blank" rel="noopener">西南石油重庆录取</a>、<a href="https://www.cnur.com/major/2543.html" target="_blank" rel="noopener">CNUR电气工程</a>、<a href="https://www.dakao100.com/article_60620.html" target="_blank" rel="noopener">西南石油专业排名</a></td><td>成都电子信息、能源装备、电力设备、制造业岗位都可承接，城市资源明显加分。</td><td>电气属于第一优先级，三年位次从17392抬到14652，说明热度上行但仍不是完全没机会。</td><td>2025位次高于考生约3500位，属于冲刺；学校行业标签偏能源，不能把它当纯电力强校。</td><td><span class="score">84</span><br><span class="tag">冲刺</span></td></tr><tr><td>5</td><td>浙江工业大学</td><td>杭州/朝晖校区</td><td>机器人工程</td><td>2025:594分约13602；2024:589分约16864；2023:551分约19711</td><td>暂未查到可靠公开2026计划；2025官方录取5人</td><td>CNUR机器人工程A第32；学校工科底盘较强，杭州制造业数字化和机器人生态较好。<br><a href="https://zs.zjut.edu.cn/jsp/lnzssearch.jsp" target="_blank" rel="noopener">浙江工业历年录取系统</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a></td><td>杭州的软件、智能制造、自动化、机器人产业资源明显加分。</td><td>城市、专业、学校工科氛围都好，值得作为高质量冲刺。</td><td>2025突然抬到约13602位，且招生少，波动风险很高；不能把2023低位当常态。</td><td><span class="score">84</span><br><span class="tag">高波动冲刺</span></td></tr><tr><td>6</td><td>江苏大学</td><td>江苏镇江/校本部</td><td>机械电子工程</td><td>2025:589分约15346；2024:585分约18320；2023:未查到同名可比数据</td><td>暂未查到可靠公开2026计划；2025官方录取3人</td><td>机械工程学科评估B+；CNUR机械电子工程A、前10%，约第9。<br><a href="https://zb.ujs.edu.cn/info/1138/15458.htm" target="_blank" rel="noopener">江苏大学2025录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/13668.htm" target="_blank" rel="noopener">江苏大学2024录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/11738.htm" target="_blank" rel="noopener">江苏大学2023录取</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></td><td>镇江城市弱于南京/苏州，但长三角制造业半径较好，机械电子就业链清晰。</td><td>适合能接受机械电子、愿意做智能制造/机电控制的学生。</td><td>招生3人，大小年风险极高；如果只想电子信息/计算机，应放在重邮之后。</td><td><span class="score">82</span><br><span class="tag">冲稳边界</span></td></tr><tr><td>7</td><td>江苏大学</td><td>江苏镇江/校本部</td><td>机械设计制造及其自动化</td><td>2025:590分约14988；2024:590分约16513；2023:556分约18037</td><td>暂未查到可靠公开2026计划；2025官方录取5人</td><td>机械工程学科评估B+，传统机械强校；机械类专业在第三方/软科口径中处于A类区间。<br><a href="https://zb.ujs.edu.cn/info/1138/15458.htm" target="_blank" rel="noopener">江苏大学2025录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/13668.htm" target="_blank" rel="noopener">江苏大学2024录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/11738.htm" target="_blank" rel="noopener">江苏大学2023录取</a></td><td>长三角制造业、汽车零部件、装备制造资源优于普通地级市。</td><td>若能接受第二优先级机械方向，这是比“冷门211工科”更实在的冲刺。</td><td>不是第一优先级；招生数小；本科就业质量更依赖个人实践和考研。</td><td><span class="score">80</span><br><span class="tag">冲刺</span></td></tr></tbody></table></div>
-    <div class="notes">
-            <article class="note">
-              <h4>冲刺 1. 重庆邮电大学｜计算机科学与技术</h4>
-              <p><b>为什么值得放：</b>专业质量强，方向最贴合第一优先级；586/18162比近三年最低位次低约3500-5000位，只能少量冲。</p>
-              <p><b>录取机会来自：</b>2025:13287；2024:同类14392；2023:同类14664，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>热门专业位次上行概率大；2024/2023为专业类口径，不能机械等同；失败风险高。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入前段少量冲刺。</p>
-            </article>
-
-            <article class="note">
-              <h4>冲刺 2. 重庆邮电大学｜通信与信息类</h4>
-              <p><b>为什么值得放：</b>比单纯冲985/211冷门专业更有逻辑，专业和学校强项高度一致。</p>
-              <p><b>录取机会来自：</b>2025:13949；2024:15413；2023:15839，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>仍高于考生位次约2300-4200位；大类内分流要核具体包含专业。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入前段冲刺。</p>
-            </article>
-
-            <article class="note">
-              <h4>冲刺 3. 重庆邮电大学｜智能技术类</h4>
-              <p><b>为什么值得放：</b>属于可以冲的热门工科大类，比经管包装的数据类更接近真实工程。</p>
-              <p><b>录取机会来自：</b>2025:14652；2024:同类14392/16864；2023:同类14664/17392，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>专业类口径变化大；若类内含不想读方向，排序应低于通信/计算机。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入冲刺。</p>
-            </article>
-
-            <article class="note">
-              <h4>冲刺 4. 西南石油大学｜电气工程及其自动化</h4>
-              <p><b>为什么值得放：</b>电气属于第一优先级，三年位次从17392抬到14652，说明热度上行但仍不是完全没机会。</p>
-              <p><b>录取机会来自：</b>2025:14652；2024:16151；2023:17392，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>2025位次高于考生约3500位，属于冲刺；学校行业标签偏能源，不能把它当纯电力强校。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议少量放入冲刺。</p>
-            </article>
-
-            <article class="note">
-              <h4>冲刺 5. 浙江工业大学｜机器人工程</h4>
-              <p><b>为什么值得放：</b>城市、专业、学校工科氛围都好，值得作为高质量冲刺。</p>
-              <p><b>录取机会来自：</b>2025:594分约13602；2024:589分约16864；2023:551分约19711，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>2025突然抬到约13602位，且招生少，波动风险很高；不能把2023低位当常态。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议少量冲。</p>
-            </article>
-
-            <article class="note">
-              <h4>冲刺 6. 江苏大学｜机械电子工程</h4>
-              <p><b>为什么值得放：</b>适合能接受机械电子、愿意做智能制造/机电控制的学生。</p>
-              <p><b>录取机会来自：</b>2025:589分约15346；2024:585分约18320；2023:未查到同名可比数据，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>招生3人，大小年风险极高；如果只想电子信息/计算机，应放在重邮之后。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>可放入冲刺末段或稳妥前段。</p>
-            </article>
-
-            <article class="note">
-              <h4>冲刺 7. 江苏大学｜机械设计制造及其自动化</h4>
-              <p><b>为什么值得放：</b>若能接受第二优先级机械方向，这是比“冷门211工科”更实在的冲刺。</p>
-              <p><b>录取机会来自：</b>2025:590分约14988；2024:590分约16513；2023:556分约18037，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>不是第一优先级；招生数小；本科就业质量更依赖个人实践和考研。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>可少量放入。</p>
-            </article>
-            </div>
+    <details class="detail-table"><summary>展开冲刺详细表格</summary><div class="table-wrap wide"><table><thead><tr><th>排序</th><th>学校</th><th>城市/校区</th><th>专业/专业类</th><th>2023-2025重庆物理类录取位次</th><th>2026招生计划</th><th>专业实力依据</th><th>城市就业逻辑</th><th>推荐理由</th><th>风险提示</th><th>综合评分</th></tr></thead><tbody><tr><td>1</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>计算机科学与技术</td><td>2025:13287；2024:同类14392；2023:同类14664</td><td>暂未查到可靠公开2026分专业计划；2025普通类117人</td><td>信息与通信、计算机是学校核心板块；学科评估中计算机科学与技术为B+，软科计算机相关学科前12%。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a>、<a href="https://www.dxsbb.com/news/73477.html" target="_blank" rel="noopener">重庆邮电学科评估</a></td><td>重庆本地数字产业、通信运营商、软件企业和成渝就业半径都匹配。</td><td>专业质量强，方向最贴合第一优先级；586/18162比近三年最低位次低约3500-5000位，只能少量冲。</td><td>热门专业位次上行概率大；2024/2023为专业类口径，不能机械等同；失败风险高。</td><td><span class="score">86</span><br><span class="tag">高风险冲刺</span></td></tr><tr><td>2</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>通信与信息类</td><td>2025:13949；2024:15413；2023:15839</td><td>暂未查到可靠公开2026计划；2025普通类266人</td><td>软科显示通信工程A第12、电子信息工程A第31；学校信息通信工程底盘强，是重邮最有标识度的方向。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>通信、设备、运营商、ICT集成、车联网和成渝电子信息产业都能承接。</td><td>比单纯冲985/211冷门专业更有逻辑，专业和学校强项高度一致。</td><td>仍高于考生位次约2300-4200位；大类内分流要核具体包含专业。</td><td><span class="score">90</span><br><span class="tag">值得冲</span></td></tr><tr><td>3</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>智能技术类</td><td>2025:14652；2024:同类14392/16864；2023:同类14664/17392</td><td>暂未查到可靠公开2026计划；2025普通类166人</td><td>软科可核智能科学与技术A第13、数据科学与大数据技术A第35；学校计算机/通信平台能支撑AI方向。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆和成都都有智能网联、工业软件、AI应用岗位，但本科就业仍需项目和算法/开发能力。</td><td>属于可以冲的热门工科大类，比经管包装的数据类更接近真实工程。</td><td>专业类口径变化大；若类内含不想读方向，排序应低于通信/计算机。</td><td><span class="score">86</span><br><span class="tag">冲刺</span></td></tr><tr><td>4</td><td>西南石油大学</td><td>成都/成都校区</td><td>电气工程及其自动化</td><td>2025:14652；2024:16151；2023:17392</td><td>暂未查到可靠公开2026计划；机构表列2026计划14人，需以重庆系统核</td><td>CNUR电气工程及其自动化B+第121；学校虽有石油行业底色，但电气方向通用就业面更宽。<br><a href="https://www.dakao100.com/article_94823909058.html" target="_blank" rel="noopener">西南石油重庆录取</a>、<a href="https://www.cnur.com/major/2543.html" target="_blank" rel="noopener">CNUR电气工程</a>、<a href="https://www.dakao100.com/article_60620.html" target="_blank" rel="noopener">西南石油专业排名</a></td><td>成都电子信息、能源装备、电力设备、制造业岗位都可承接，城市资源明显加分。</td><td>电气属于第一优先级，三年位次从17392抬到14652，说明热度上行但仍不是完全没机会。</td><td>2025位次高于考生约3500位，属于冲刺；学校行业标签偏能源，不能把它当纯电力强校。</td><td><span class="score">84</span><br><span class="tag">冲刺</span></td></tr><tr><td>5</td><td>浙江工业大学</td><td>杭州/朝晖校区</td><td>机器人工程</td><td>2025:594分约13602；2024:589分约16864；2023:551分约19711</td><td>暂未查到可靠公开2026计划；2025官方录取5人</td><td>CNUR机器人工程A第32；学校工科底盘较强，杭州制造业数字化和机器人生态较好。<br><a href="https://zs.zjut.edu.cn/jsp/lnzssearch.jsp" target="_blank" rel="noopener">浙江工业历年录取系统</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a></td><td>杭州的软件、智能制造、自动化、机器人产业资源明显加分。</td><td>城市、专业、学校工科氛围都好，值得作为高质量冲刺。</td><td>2025突然抬到约13602位，且招生少，波动风险很高；不能把2023低位当常态。</td><td><span class="score">84</span><br><span class="tag">高波动冲刺</span></td></tr><tr><td>6</td><td>江苏大学</td><td>江苏镇江/校本部</td><td>机械电子工程</td><td>2025:589分约15346；2024:585分约18320；2023:未查到同名可比数据</td><td>暂未查到可靠公开2026计划；2025官方录取3人</td><td>机械工程学科评估B+；CNUR机械电子工程A、前10%，约第9。<br><a href="https://zb.ujs.edu.cn/info/1138/15458.htm" target="_blank" rel="noopener">江苏大学2025录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/13668.htm" target="_blank" rel="noopener">江苏大学2024录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/11738.htm" target="_blank" rel="noopener">江苏大学2023录取</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></td><td>镇江城市弱于南京/苏州，但长三角制造业半径较好，机械电子就业链清晰。</td><td>适合能接受机械电子、愿意做智能制造/机电控制的学生。</td><td>招生3人，大小年风险极高；如果只想电子信息/计算机，应放在重邮之后。</td><td><span class="score">82</span><br><span class="tag">冲稳边界</span></td></tr><tr><td>7</td><td>江苏大学</td><td>江苏镇江/校本部</td><td>机械设计制造及其自动化</td><td>2025:590分约14988；2024:590分约16513；2023:556分约18037</td><td>暂未查到可靠公开2026计划；2025官方录取5人</td><td>机械工程学科评估B+，传统机械强校；机械类专业在第三方/软科口径中处于A类区间。<br><a href="https://zb.ujs.edu.cn/info/1138/15458.htm" target="_blank" rel="noopener">江苏大学2025录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/13668.htm" target="_blank" rel="noopener">江苏大学2024录取</a>、<a href="https://zb.ujs.edu.cn/info/1138/11738.htm" target="_blank" rel="noopener">江苏大学2023录取</a></td><td>长三角制造业、汽车零部件、装备制造资源优于普通地级市。</td><td>若能接受第二优先级机械方向，这是比“冷门211工科”更实在的冲刺。</td><td>不是第一优先级；招生数小；本科就业质量更依赖个人实践和考研。</td><td><span class="score">80</span><br><span class="tag">冲刺</span></td></tr></tbody></table></div></details>
   </section>
 
   <section id="stable">
     <h2>6. 稳妥志愿清单</h2>
     <p>稳妥部分是本方案核心：录取位次贴近18162，且专业、城市、就业逻辑较均衡。</p>
-    <div class="table-wrap wide"><table><thead><tr><th>排序</th><th>学校</th><th>城市/校区</th><th>专业/专业类</th><th>2023-2025重庆物理类录取位次</th><th>2026招生计划</th><th>专业实力依据</th><th>城市就业逻辑</th><th>推荐理由</th><th>风险提示</th><th>综合评分</th></tr></thead><tbody><tr><td>1</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>电子工程类</td><td>2025:18260；2024:18694；2023:集成电路与电子工程类20706</td><td>暂未查到可靠公开2026计划；2025普通类252人</td><td>重邮电子信息工程软科A第31，信息通信和电子信息是学校核心工科平台。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆电子信息、汽车电子、通信设备和成渝产业带匹配。</td><td>位次几乎贴合586/18162，是最核心的稳妥选择之一。</td><td>必须核大类具体专业和分流规则；若不含目标电子信息方向，排序下调。</td><td><span class="score">88</span><br><span class="tag">核心稳妥</span></td></tr><tr><td>2</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>软件工程</td><td>2025:19815；2024:20262；2023:20706</td><td>暂未查到可靠公开2026计划；2025普通类193人</td><td>软科软件工程A第42；重邮软件、计算机和通信平台叠加，就业方向清楚。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆本地软件园、成都互联网/软件岗位均可辐射。</td><td>考生位次优于近三年最低位次，专业热度高但录取匹配好。</td><td>学费和培养模式需核；软件工程学习强度高，不能只看专业名。</td><td><span class="score">89</span><br><span class="tag">核心稳妥</span></td></tr><tr><td>3</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>机器人工程</td><td>2025:19441；2024:19519；2023:智能制造与机器人类23650/相关20043</td><td>暂未查到可靠公开2026计划；2025普通类72人</td><td>CNUR机器人工程B+第54；控制/智能相关学科有支撑。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆汽车、智能制造、工业自动化场景丰富；就业可走自动化、嵌入式、机器人应用。</td><td>位次匹配，专业方向符合第一优先级后段。</td><td>机器人本科口径偏宽，若课程偏机械/控制，未来最好通过项目或考研增强竞争力。</td><td><span class="score">83</span><br><span class="tag">稳妥</span></td></tr><tr><td>4</td><td>西南石油大学</td><td>成都/成都校区</td><td>机器人工程</td><td>2025:17490；2024:19109；2023:19711</td><td>暂未查到可靠公开2026计划；机构表列2026计划4人，需以重庆系统核</td><td>CNUR机器人工程B+，学校机械/能源装备背景可支撑机器人应用方向。<br><a href="https://www.dakao100.com/article_94823909058.html" target="_blank" rel="noopener">西南石油重庆录取</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a>、<a href="https://www.dakao100.com/article_60620.html" target="_blank" rel="noopener">西南石油专业排名</a></td><td>成都智能制造、自动化、机器人应用和软件岗位资源较好。</td><td>位次贴近且略优于18162，专业方向符合第一优先级后段，比冷门石油/地质方向更适合。</td><td>2026计划可能只有4人，小计划波动很大；机器人方向本科就业需要项目能力支撑。</td><td><span class="score">82</span><br><span class="tag">稳妥后段</span></td></tr><tr><td>5</td><td>成都信息工程大学</td><td>成都/航空港校区</td><td>电子信息工程</td><td>2025:公开聚合约19441，待官方更新；2024:582分约19519；2023:550分约20043</td><td>2026重庆计划7人，航空港校区</td><td>软科显示电子信息工程A第51；学校信息类和电子工程学院专业口径清楚。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chengdu-university-of-information-technology" target="_blank" rel="noopener">成都信息工程软科</a></td><td>成都电子信息、软件、通信和半导体岗位多，航空港校区区位较好。</td><td>城市和专业都匹配，录取位次略低于考生位次，是稳妥核心备选。</td><td>2026计划只有7人，小样本会放大波动；2025明细需等学校历史库更新核验。</td><td><span class="score">84</span><br><span class="tag">稳妥</span></td></tr><tr><td>6</td><td>成都信息工程大学</td><td>成都/航空港校区</td><td>电子信息科学与技术</td><td>2025:公开聚合约19441，待官方更新；2024:583分约19109；2023:551分约19711</td><td>2026重庆计划6人，航空港校区</td><td>软科显示电子信息科学与技术B+第34；电子工程学院办学，方向偏电子信息和光电/信号。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chengdu-university-of-information-technology" target="_blank" rel="noopener">成都信息工程软科</a></td><td>成都产业资源明显优于一般省会，适合电子信息就业与考研。</td><td>专业实力、城市和录取匹配度均衡。</td><td>招生6人，波动风险高；与电子信息工程相比，岗位识别度略弱。</td><td><span class="score">82</span><br><span class="tag">稳妥</span></td></tr><tr><td>7</td><td>成都信息工程大学</td><td>成都/航空港校区</td><td>网络工程</td><td>2025:公开聚合约21426，待官方更新；2024:578分约21039；2023:547分约21046</td><td>2026重庆计划4人，航空港校区</td><td>软科显示网络工程A第22，CNUR显示B+第62；网络空间安全学院办学，就业方向清楚。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.cnur.com/major/3148.html" target="_blank" rel="noopener">CNUR网络工程</a></td><td>成都网络安全、软件开发、云计算和运维岗位资源较好。</td><td>考生位次明显优于近两年最低位次，是较好的稳妥偏安全项。</td><td>计划仅4人，必须防波动；网络工程不同于网络空间安全，课程偏网络系统和工程实现。</td><td><span class="score">82</span><br><span class="tag">稳妥偏安全</span></td></tr><tr><td>8</td><td>浙江理工大学</td><td>杭州/下沙校区</td><td>机械电子工程</td><td>2025:公开聚合约18260；2024:约19881；2023:约20043，需在官方查询系统复核</td><td>暂未查到可靠公开2026计划</td><td>机械电子工程A类、第三方榜单前10%；杭州城市产业强，机电、自动化和智能制造场景丰富。<br><a href="https://zs.zstu.edu.cn/info/1038/3883.htm" target="_blank" rel="noopener">浙江理工录取入口</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></td><td>杭州的制造业数字化、机器人和自动化公司较多，城市加分明显。</td><td>如果接受第二优先级机械电子，这是城市和专业都较均衡的稳妥项。</td><td>录取数据需在浙江理工官方查询系统逐项核；专业不是计算机/通信主线。</td><td><span class="score">80</span><br><span class="tag">稳妥待核</span></td></tr></tbody></table></div>
-    <div class="notes">
-            <article class="note">
-              <h4>稳妥 1. 重庆邮电大学｜电子工程类</h4>
-              <p><b>为什么值得放：</b>位次几乎贴合586/18162，是最核心的稳妥选择之一。</p>
-              <p><b>录取机会来自：</b>2025:18260；2024:18694；2023:集成电路与电子工程类20706，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>必须核大类具体专业和分流规则；若不含目标电子信息方向，排序下调。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>强烈建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 2. 重庆邮电大学｜软件工程</h4>
-              <p><b>为什么值得放：</b>考生位次优于近三年最低位次，专业热度高但录取匹配好。</p>
-              <p><b>录取机会来自：</b>2025:19815；2024:20262；2023:20706，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>学费和培养模式需核；软件工程学习强度高，不能只看专业名。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>强烈建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 3. 重庆邮电大学｜机器人工程</h4>
-              <p><b>为什么值得放：</b>位次匹配，专业方向符合第一优先级后段。</p>
-              <p><b>录取机会来自：</b>2025:19441；2024:19519；2023:智能制造与机器人类23650/相关20043，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>机器人本科口径偏宽，若课程偏机械/控制，未来最好通过项目或考研增强竞争力。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 4. 西南石油大学｜机器人工程</h4>
-              <p><b>为什么值得放：</b>位次贴近且略优于18162，专业方向符合第一优先级后段，比冷门石油/地质方向更适合。</p>
-              <p><b>录取机会来自：</b>2025:17490；2024:19109；2023:19711，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>2026计划可能只有4人，小计划波动很大；机器人方向本科就业需要项目能力支撑。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>可放入稳妥后段。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 5. 成都信息工程大学｜电子信息工程</h4>
-              <p><b>为什么值得放：</b>城市和专业都匹配，录取位次略低于考生位次，是稳妥核心备选。</p>
-              <p><b>录取机会来自：</b>2025:公开聚合约19441，待官方更新；2024:582分约19519；2023:550分约20043，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>2026计划只有7人，小样本会放大波动；2025明细需等学校历史库更新核验。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 6. 成都信息工程大学｜电子信息科学与技术</h4>
-              <p><b>为什么值得放：</b>专业实力、城市和录取匹配度均衡。</p>
-              <p><b>录取机会来自：</b>2025:公开聚合约19441，待官方更新；2024:583分约19109；2023:551分约19711，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>招生6人，波动风险高；与电子信息工程相比，岗位识别度略弱。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 7. 成都信息工程大学｜网络工程</h4>
-              <p><b>为什么值得放：</b>考生位次明显优于近两年最低位次，是较好的稳妥偏安全项。</p>
-              <p><b>录取机会来自：</b>2025:公开聚合约21426，待官方更新；2024:578分约21039；2023:547分约21046，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>计划仅4人，必须防波动；网络工程不同于网络空间安全，课程偏网络系统和工程实现。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>稳妥 8. 浙江理工大学｜机械电子工程</h4>
-              <p><b>为什么值得放：</b>如果接受第二优先级机械电子，这是城市和专业都较均衡的稳妥项。</p>
-              <p><b>录取机会来自：</b>2025:公开聚合约18260；2024:约19881；2023:约20043，需在官方查询系统复核，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>录取数据需在浙江理工官方查询系统逐项核；专业不是计算机/通信主线。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>可放入，但需最终核官方数据。</p>
-            </article>
-            </div>
+    <details class="detail-table"><summary>展开稳妥详细表格</summary><div class="table-wrap wide"><table><thead><tr><th>排序</th><th>学校</th><th>城市/校区</th><th>专业/专业类</th><th>2023-2025重庆物理类录取位次</th><th>2026招生计划</th><th>专业实力依据</th><th>城市就业逻辑</th><th>推荐理由</th><th>风险提示</th><th>综合评分</th></tr></thead><tbody><tr><td>1</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>电子工程类</td><td>2025:18260；2024:18694；2023:集成电路与电子工程类20706</td><td>暂未查到可靠公开2026计划；2025普通类252人</td><td>重邮电子信息工程软科A第31，信息通信和电子信息是学校核心工科平台。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆电子信息、汽车电子、通信设备和成渝产业带匹配。</td><td>位次几乎贴合586/18162，是最核心的稳妥选择之一。</td><td>必须核大类具体专业和分流规则；若不含目标电子信息方向，排序下调。</td><td><span class="score">88</span><br><span class="tag">核心稳妥</span></td></tr><tr><td>2</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>软件工程</td><td>2025:19815；2024:20262；2023:20706</td><td>暂未查到可靠公开2026计划；2025普通类193人</td><td>软科软件工程A第42；重邮软件、计算机和通信平台叠加，就业方向清楚。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆本地软件园、成都互联网/软件岗位均可辐射。</td><td>考生位次优于近三年最低位次，专业热度高但录取匹配好。</td><td>学费和培养模式需核；软件工程学习强度高，不能只看专业名。</td><td><span class="score">89</span><br><span class="tag">核心稳妥</span></td></tr><tr><td>3</td><td>重庆邮电大学</td><td>重庆南岸/校本部</td><td>机器人工程</td><td>2025:19441；2024:19519；2023:智能制造与机器人类23650/相关20043</td><td>暂未查到可靠公开2026计划；2025普通类72人</td><td>CNUR机器人工程B+第54；控制/智能相关学科有支撑。<br><a href="https://www.dxsbb.com/news/33445.html" target="_blank" rel="noopener">重庆邮电历年录取</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a>、<a href="https://www.shanghairanking.cn/institution/chongqing-university-of-posts-and-telecommunications" target="_blank" rel="noopener">重庆邮电软科</a></td><td>重庆汽车、智能制造、工业自动化场景丰富；就业可走自动化、嵌入式、机器人应用。</td><td>位次匹配，专业方向符合第一优先级后段。</td><td>机器人本科口径偏宽，若课程偏机械/控制，未来最好通过项目或考研增强竞争力。</td><td><span class="score">83</span><br><span class="tag">稳妥</span></td></tr><tr><td>4</td><td>西南石油大学</td><td>成都/成都校区</td><td>机器人工程</td><td>2025:17490；2024:19109；2023:19711</td><td>暂未查到可靠公开2026计划；机构表列2026计划4人，需以重庆系统核</td><td>CNUR机器人工程B+，学校机械/能源装备背景可支撑机器人应用方向。<br><a href="https://www.dakao100.com/article_94823909058.html" target="_blank" rel="noopener">西南石油重庆录取</a>、<a href="https://www.cnur.com/major/3086.html" target="_blank" rel="noopener">CNUR机器人工程</a>、<a href="https://www.dakao100.com/article_60620.html" target="_blank" rel="noopener">西南石油专业排名</a></td><td>成都智能制造、自动化、机器人应用和软件岗位资源较好。</td><td>位次贴近且略优于18162，专业方向符合第一优先级后段，比冷门石油/地质方向更适合。</td><td>2026计划可能只有4人，小计划波动很大；机器人方向本科就业需要项目能力支撑。</td><td><span class="score">82</span><br><span class="tag">稳妥后段</span></td></tr><tr><td>5</td><td>成都信息工程大学</td><td>成都/航空港校区</td><td>电子信息工程</td><td>2025:公开聚合约19441，待官方更新；2024:582分约19519；2023:550分约20043</td><td>2026重庆计划7人，航空港校区</td><td>软科显示电子信息工程A第51；学校信息类和电子工程学院专业口径清楚。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chengdu-university-of-information-technology" target="_blank" rel="noopener">成都信息工程软科</a></td><td>成都电子信息、软件、通信和半导体岗位多，航空港校区区位较好。</td><td>城市和专业都匹配，录取位次略低于考生位次，是稳妥核心备选。</td><td>2026计划只有7人，小样本会放大波动；2025明细需等学校历史库更新核验。</td><td><span class="score">84</span><br><span class="tag">稳妥</span></td></tr><tr><td>6</td><td>成都信息工程大学</td><td>成都/航空港校区</td><td>电子信息科学与技术</td><td>2025:公开聚合约19441，待官方更新；2024:583分约19109；2023:551分约19711</td><td>2026重庆计划6人，航空港校区</td><td>软科显示电子信息科学与技术B+第34；电子工程学院办学，方向偏电子信息和光电/信号。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.shanghairanking.cn/institution/chengdu-university-of-information-technology" target="_blank" rel="noopener">成都信息工程软科</a></td><td>成都产业资源明显优于一般省会，适合电子信息就业与考研。</td><td>专业实力、城市和录取匹配度均衡。</td><td>招生6人，波动风险高；与电子信息工程相比，岗位识别度略弱。</td><td><span class="score">82</span><br><span class="tag">稳妥</span></td></tr><tr><td>7</td><td>成都信息工程大学</td><td>成都/航空港校区</td><td>网络工程</td><td>2025:公开聚合约21426，待官方更新；2024:578分约21039；2023:547分约21046</td><td>2026重庆计划4人，航空港校区</td><td>软科显示网络工程A第22，CNUR显示B+第62；网络空间安全学院办学，就业方向清楚。<br><a href="https://zs.cuit.edu.cn/info/1096/1688.htm" target="_blank" rel="noopener">成都信息工程2026计划</a>、<a href="https://zssj.cuit.edu.cn/sjTj.asp?sf=%D6%D8%C7%EC&amp;kl=%CE%EF%C0%ED%2B%BB%AF%D1%A7" target="_blank" rel="noopener">成都信息工程历年录取</a>、<a href="https://www.cnur.com/major/3148.html" target="_blank" rel="noopener">CNUR网络工程</a></td><td>成都网络安全、软件开发、云计算和运维岗位资源较好。</td><td>考生位次明显优于近两年最低位次，是较好的稳妥偏安全项。</td><td>计划仅4人，必须防波动；网络工程不同于网络空间安全，课程偏网络系统和工程实现。</td><td><span class="score">82</span><br><span class="tag">稳妥偏安全</span></td></tr><tr><td>8</td><td>浙江理工大学</td><td>杭州/下沙校区</td><td>机械电子工程</td><td>2025:公开聚合约18260；2024:约19881；2023:约20043，需在官方查询系统复核</td><td>暂未查到可靠公开2026计划</td><td>机械电子工程A类、第三方榜单前10%；杭州城市产业强，机电、自动化和智能制造场景丰富。<br><a href="https://zs.zstu.edu.cn/info/1038/3883.htm" target="_blank" rel="noopener">浙江理工录取入口</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></td><td>杭州的制造业数字化、机器人和自动化公司较多，城市加分明显。</td><td>如果接受第二优先级机械电子，这是城市和专业都较均衡的稳妥项。</td><td>录取数据需在浙江理工官方查询系统逐项核；专业不是计算机/通信主线。</td><td><span class="score">80</span><br><span class="tag">稳妥待核</span></td></tr></tbody></table></div></details>
   </section>
 
   <section id="safety">
     <h2>7. 保底志愿清单</h2>
     <p>保底不是乱保；这里仍然只放能接受、就业逻辑清楚、评级达到B以上或有强应用背景的工科方向。</p>
-    <div class="table-wrap wide"><table><thead><tr><th>排序</th><th>学校</th><th>城市/校区</th><th>专业/专业类</th><th>2023-2025重庆物理类录取位次</th><th>2026招生计划</th><th>专业实力依据</th><th>城市就业逻辑</th><th>推荐理由</th><th>风险提示</th><th>综合评分</th></tr></thead><tbody><tr><td>1</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>机械电子工程</td><td>2025:32804；2024:37057；2023:39688</td><td>暂未查到可靠公开2026计划；2025普通类133人</td><td>软科口径机械电子工程A第31，CNUR口径B+第46；学校机械与车辆方向有基础。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></td><td>重庆汽车、装备制造、电子制造资源能承接机电控制方向。</td><td>考生位次明显优于近三年最低位次，安全性高且专业不差。</td><td>不是第一优先级；两江校区与花溪校区资源差异需核；本科就业要靠项目经验。</td><td><span class="score">86</span><br><span class="tag">高质量保底</span></td></tr><tr><td>2</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>智能车辆工程</td><td>2025:31746；2024:35590；2023:37366</td><td>暂未查到可靠公开2026计划；2025普通类98人</td><td>智能车辆工程B+第11；学校车辆行业背景清楚。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2733.html" target="_blank" rel="noopener">CNUR智能车辆工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></td><td>重庆智能网联新能源汽车产业链强，长安、赛力斯及配套企业形成就业半径。</td><td>安全边际大，方向比传统车辆更贴近电控、智能化。</td><td>车辆方向有周期性；如果学生排斥汽车行业，则不应作为核心保底。</td><td><span class="score">84</span><br><span class="tag">高质量保底</span></td></tr><tr><td>3</td><td>重庆理工大学</td><td>重庆/花溪校区</td><td>电气工程及其自动化</td><td>2025:24396；2024:26509；2023:28698</td><td>暂未查到可靠公开2026计划；2025普通类100人</td><td>CNUR电气工程及其自动化B第228；工科就业方向清晰，适合电气、电控、制造业自动化。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2543.html" target="_blank" rel="noopener">CNUR电气工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></td><td>重庆制造、电力设备、汽车电子和国企岗位均有承接。</td><td>位次安全，专业接受度高，是保底里更适合家长理解的一项。</td><td>若目标是国家电网核心岗位，本科院校层级不算强；需要考研或提高证书/实践竞争力。</td><td><span class="score">83</span><br><span class="tag">稳保结合</span></td></tr><tr><td>4</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>车辆工程</td><td>2025:28271；2024:30664；2023:31976</td><td>暂未查到可靠公开2026计划；2025普通类118人</td><td>车辆工程为学校传统优势方向；第三方评级可核为B及以上区间。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2734.html" target="_blank" rel="noopener">CNUR车辆工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></td><td>重庆汽车产业资源全国突出，行业对口性强。</td><td>作为保底比材料、化工、土木等方向更可控。</td><td>传统车辆不等于自动驾驶；若只想计算机/电子，应放在电气和机械电子之后。</td><td><span class="score">81</span><br><span class="tag">保底</span></td></tr><tr><td>5</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>物联网工程</td><td>2025:28751；2024:29235；2023:30304</td><td>暂未查到可靠公开2026计划；2025普通类32人</td><td>CNUR物联网工程B第126；方向贴近嵌入式、网络、传感和应用开发。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/3130.html" target="_blank" rel="noopener">CNUR物联网工程</a></td><td>重庆电子信息、智能制造和车联网场景能提供实习与就业机会。</td><td>分数安全，专业方向比纯管理类数据专业更贴近工科。</td><td>招生32人不算大；学校计算机平台不如重邮，不能把它当强计算机替代。</td><td><span class="score">79</span><br><span class="tag">保底</span></td></tr></tbody></table></div>
-    <div class="notes">
-            <article class="note">
-              <h4>保底 1. 重庆理工大学｜机械电子工程</h4>
-              <p><b>为什么值得放：</b>考生位次明显优于近三年最低位次，安全性高且专业不差。</p>
-              <p><b>录取机会来自：</b>2025:32804；2024:37057；2023:39688，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>不是第一优先级；两江校区与花溪校区资源差异需核；本科就业要靠项目经验。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>强烈建议作为保底。</p>
-            </article>
-
-            <article class="note">
-              <h4>保底 2. 重庆理工大学｜智能车辆工程</h4>
-              <p><b>为什么值得放：</b>安全边际大，方向比传统车辆更贴近电控、智能化。</p>
-              <p><b>录取机会来自：</b>2025:31746；2024:35590；2023:37366，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>车辆方向有周期性；如果学生排斥汽车行业，则不应作为核心保底。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>保底 3. 重庆理工大学｜电气工程及其自动化</h4>
-              <p><b>为什么值得放：</b>位次安全，专业接受度高，是保底里更适合家长理解的一项。</p>
-              <p><b>录取机会来自：</b>2025:24396；2024:26509；2023:28698，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>若目标是国家电网核心岗位，本科院校层级不算强；需要考研或提高证书/实践竞争力。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入保底前段。</p>
-            </article>
-
-            <article class="note">
-              <h4>保底 4. 重庆理工大学｜车辆工程</h4>
-              <p><b>为什么值得放：</b>作为保底比材料、化工、土木等方向更可控。</p>
-              <p><b>录取机会来自：</b>2025:28271；2024:30664；2023:31976，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>传统车辆不等于自动驾驶；若只想计算机/电子，应放在电气和机械电子之后。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>建议放入。</p>
-            </article>
-
-            <article class="note">
-              <h4>保底 5. 重庆理工大学｜物联网工程</h4>
-              <p><b>为什么值得放：</b>分数安全，专业方向比纯管理类数据专业更贴近工科。</p>
-              <p><b>录取机会来自：</b>2025:28751；2024:29235；2023:30304，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>招生32人不算大；学校计算机平台不如重邮，不能把它当强计算机替代。</p>
-              <p><b>是否值得牺牲专业冲学校：</b>可放入保底。</p>
-            </article>
-            </div>
+    <details class="detail-table"><summary>展开保底详细表格</summary><div class="table-wrap wide"><table><thead><tr><th>排序</th><th>学校</th><th>城市/校区</th><th>专业/专业类</th><th>2023-2025重庆物理类录取位次</th><th>2026招生计划</th><th>专业实力依据</th><th>城市就业逻辑</th><th>推荐理由</th><th>风险提示</th><th>综合评分</th></tr></thead><tbody><tr><td>1</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>机械电子工程</td><td>2025:32804；2024:37057；2023:39688</td><td>暂未查到可靠公开2026计划；2025普通类133人</td><td>软科口径机械电子工程A第31，CNUR口径B+第46；学校机械与车辆方向有基础。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2740.html" target="_blank" rel="noopener">CNUR机械电子工程</a></td><td>重庆汽车、装备制造、电子制造资源能承接机电控制方向。</td><td>考生位次明显优于近三年最低位次，安全性高且专业不差。</td><td>不是第一优先级；两江校区与花溪校区资源差异需核；本科就业要靠项目经验。</td><td><span class="score">86</span><br><span class="tag">高质量保底</span></td></tr><tr><td>2</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>智能车辆工程</td><td>2025:31746；2024:35590；2023:37366</td><td>暂未查到可靠公开2026计划；2025普通类98人</td><td>智能车辆工程B+第11；学校车辆行业背景清楚。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2733.html" target="_blank" rel="noopener">CNUR智能车辆工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></td><td>重庆智能网联新能源汽车产业链强，长安、赛力斯及配套企业形成就业半径。</td><td>安全边际大，方向比传统车辆更贴近电控、智能化。</td><td>车辆方向有周期性；如果学生排斥汽车行业，则不应作为核心保底。</td><td><span class="score">84</span><br><span class="tag">高质量保底</span></td></tr><tr><td>3</td><td>重庆理工大学</td><td>重庆/花溪校区</td><td>电气工程及其自动化</td><td>2025:24396；2024:26509；2023:28698</td><td>暂未查到可靠公开2026计划；2025普通类100人</td><td>CNUR电气工程及其自动化B第228；工科就业方向清晰，适合电气、电控、制造业自动化。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2543.html" target="_blank" rel="noopener">CNUR电气工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></td><td>重庆制造、电力设备、汽车电子和国企岗位均有承接。</td><td>位次安全，专业接受度高，是保底里更适合家长理解的一项。</td><td>若目标是国家电网核心岗位，本科院校层级不算强；需要考研或提高证书/实践竞争力。</td><td><span class="score">83</span><br><span class="tag">稳保结合</span></td></tr><tr><td>4</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>车辆工程</td><td>2025:28271；2024:30664；2023:31976</td><td>暂未查到可靠公开2026计划；2025普通类118人</td><td>车辆工程为学校传统优势方向；第三方评级可核为B及以上区间。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/2734.html" target="_blank" rel="noopener">CNUR车辆工程</a>、<a href="https://www.sohu.com/a/887883078_356902" target="_blank" rel="noopener">重庆理工专业排名</a></td><td>重庆汽车产业资源全国突出，行业对口性强。</td><td>作为保底比材料、化工、土木等方向更可控。</td><td>传统车辆不等于自动驾驶；若只想计算机/电子，应放在电气和机械电子之后。</td><td><span class="score">81</span><br><span class="tag">保底</span></td></tr><tr><td>5</td><td>重庆理工大学</td><td>重庆/两江校区</td><td>物联网工程</td><td>2025:28751；2024:29235；2023:30304</td><td>暂未查到可靠公开2026计划；2025普通类32人</td><td>CNUR物联网工程B第126；方向贴近嵌入式、网络、传感和应用开发。<br><a href="https://www.dxsbb.com/news/33519.html" target="_blank" rel="noopener">重庆理工历年录取</a>、<a href="https://www.cnur.com/major/3130.html" target="_blank" rel="noopener">CNUR物联网工程</a></td><td>重庆电子信息、智能制造和车联网场景能提供实习与就业机会。</td><td>分数安全，专业方向比纯管理类数据专业更贴近工科。</td><td>招生32人不算大；学校计算机平台不如重邮，不能把它当强计算机替代。</td><td><span class="score">79</span><br><span class="tag">保底</span></td></tr></tbody></table></div></details>
   </section>
 
   <section id="avoid">
     <h2>8. 不建议选择 / 需要谨慎的学校专业</h2>
-    <div class="table-wrap "><table><thead><tr><th>学校</th><th>专业</th><th>为什么看起来能选</th><th>为什么不建议或需谨慎</th><th>是否彻底排除</th></tr></thead><tbody><tr><td>河海大学</td><td>交通工程</td><td>211、学校名气好，专业评级A</td><td>不是目标优先级；交通工程就业/深造路径窄，且有校区流转和计划2人风险。</td><td>不彻底排除，但不建议冲</td></tr><tr><td>中国石油大学(北京)</td><td>过程装备与控制工程</td><td>211、评级B+</td><td>过程装备偏石化装备，行业窄，不适合只想电子信息/计算机/智能制造的目标。</td><td>建议排除</td></tr><tr><td>重庆邮电大学</td><td>医学信息工程</td><td>重邮平台好，评级高</td><td>医学信息工程就业口径不如计算机/软件/电子明确，用户已列入谨慎专业。</td><td>建议排除</td></tr><tr><td>重庆邮电大学</td><td>数据科学与大数据技术+经济学联合</td><td>分数和评级好看</td><td>联合经济学，容易偏离纯工科；不是不能读，但不应压过软件/电子/通信。</td><td>不优先</td></tr><tr><td>成都理工大学</td><td>数字媒体技术</td><td>名字热门、城市成都</td><td>数字媒体偏交互/内容技术，不是本次核心工科方向，且需看具体校区。</td><td>不优先</td></tr><tr><td>西南大学/南京工业/江苏大学等</td><td>材料、化工、无机非金属</td><td>学校层级或学科看起来不错</td><td>与家庭明确偏好不匹配，就业和转方向成本较高。</td><td>建议排除</td></tr><tr><td>财经/经贸类院校</td><td>数据科学与大数据技术</td><td>专业名含数据</td><td>学校平台偏财经，经管包装风险高，不符合工科强专业逻辑。</td><td>建议排除</td></tr><tr><td>北方工业大学</td><td>电气工程及其自动化</td><td>北京城市+评级B+</td><td>2026机构表计划仅1人，近年位次远高于18162，性价比不高。</td><td>只可极少量冲，不建议主冲</td></tr></tbody></table></div>
+    <details class="detail-table"><summary>展开谨慎/不建议表格</summary><div class="table-wrap "><table><thead><tr><th>学校</th><th>专业</th><th>为什么看起来能选</th><th>为什么不建议或需谨慎</th><th>是否彻底排除</th></tr></thead><tbody><tr><td>河海大学</td><td>交通工程</td><td>211、学校名气好，专业评级A</td><td>不是目标优先级；交通工程就业/深造路径窄，且有校区流转和计划2人风险。</td><td>不彻底排除，但不建议冲</td></tr><tr><td>中国石油大学(北京)</td><td>过程装备与控制工程</td><td>211、评级B+</td><td>过程装备偏石化装备，行业窄，不适合只想电子信息/计算机/智能制造的目标。</td><td>建议排除</td></tr><tr><td>重庆邮电大学</td><td>医学信息工程</td><td>重邮平台好，评级高</td><td>医学信息工程就业口径不如计算机/软件/电子明确，用户已列入谨慎专业。</td><td>建议排除</td></tr><tr><td>重庆邮电大学</td><td>数据科学与大数据技术+经济学联合</td><td>分数和评级好看</td><td>联合经济学，容易偏离纯工科；不是不能读，但不应压过软件/电子/通信。</td><td>不优先</td></tr><tr><td>成都理工大学</td><td>数字媒体技术</td><td>名字热门、城市成都</td><td>数字媒体偏交互/内容技术，不是本次核心工科方向，且需看具体校区。</td><td>不优先</td></tr><tr><td>西南大学/南京工业/江苏大学等</td><td>材料、化工、无机非金属</td><td>学校层级或学科看起来不错</td><td>与家庭明确偏好不匹配，就业和转方向成本较高。</td><td>建议排除</td></tr><tr><td>财经/经贸类院校</td><td>数据科学与大数据技术</td><td>专业名含数据</td><td>学校平台偏财经，经管包装风险高，不符合工科强专业逻辑。</td><td>建议排除</td></tr><tr><td>北方工业大学</td><td>电气工程及其自动化</td><td>北京城市+评级B+</td><td>2026机构表计划仅1人，近年位次远高于18162，性价比不高。</td><td>只可极少量冲，不建议主冲</td></tr></tbody></table></div></details>
     <h3>待核扩展池</h3>
     <p>这些不是否定，而是当前公开数据还不足以直接放进最终主表。等重庆志愿系统开放后，应逐项核2026计划、校区、专业评级和近三年位次。</p>
-    <div class="table-wrap "><table><thead><tr><th>学校</th><th>专业</th><th>保留价值</th><th>缺什么数据</th><th>处理建议</th></tr></thead><tbody><tr><td>重庆邮电大学</td><td>集成电路类</td><td>2025位次17490、城市和电子信息平台都好，方向符合第一优先级</td><td>独立专业评级暂未稳定核到B及以上；需核2026大类包含专业和分流规则</td><td>只要核到B以上，可插入稳妥前段；未核前不进主表</td></tr><tr><td>中国计量大学</td><td>测控技术与仪器/智能感知工程</td><td>杭州；仪器方向强，测控A、智能感知B+可核</td><td>重庆2026专业计划和近三年专业位次仍需在官方系统补齐</td><td>若计划稳定，可作为稳妥后段</td></tr><tr><td>湖北工业大学</td><td>电气工程及其自动化</td><td>武汉；机构表位次约19815/21039/22909，第三方评级B+</td><td>软科或学校官方专业评级需复核，不能只靠机构表</td><td>待核后可进稳妥</td></tr><tr><td>上海海事大学</td><td>机械电子工程</td><td>上海临港，机电方向B+，城市资源好</td><td>招生少，专业和学校行业偏航运，需要确认是否接受</td><td>待核后可少量放稳妥</td></tr><tr><td>南通大学</td><td>物联网工程/通信工程</td><td>长三角；部分专业B/B+</td><td>校区启东/啬园切换，城市和学校工科平台不如重邮/成信</td><td>可作保底扩展</td></tr><tr><td>北京联合大学</td><td>计算机科学与技术</td><td>北京城市，位次安全性较高</td><td>学校层级和专业平台一般，评级来源需复核</td><td>只作保底扩展</td></tr><tr><td>重庆交通大学</td><td>机械设计制造及其自动化</td><td>重庆本地，位次安全</td><td>学校强项偏交通土木，非电子信息主线</td><td>只在保底不足时考虑</td></tr></tbody></table></div>
+    <details class="detail-table"><summary>展开待核扩展池表格</summary><div class="table-wrap "><table><thead><tr><th>学校</th><th>专业</th><th>保留价值</th><th>缺什么数据</th><th>处理建议</th></tr></thead><tbody><tr><td>重庆邮电大学</td><td>集成电路类</td><td>2025位次17490、城市和电子信息平台都好，方向符合第一优先级</td><td>独立专业评级暂未稳定核到B及以上；需核2026大类包含专业和分流规则</td><td>只要核到B以上，可插入稳妥前段；未核前不进主表</td></tr><tr><td>中国计量大学</td><td>测控技术与仪器/智能感知工程</td><td>杭州；仪器方向强，测控A、智能感知B+可核</td><td>重庆2026专业计划和近三年专业位次仍需在官方系统补齐</td><td>若计划稳定，可作为稳妥后段</td></tr><tr><td>湖北工业大学</td><td>电气工程及其自动化</td><td>武汉；机构表位次约19815/21039/22909，第三方评级B+</td><td>软科或学校官方专业评级需复核，不能只靠机构表</td><td>待核后可进稳妥</td></tr><tr><td>上海海事大学</td><td>机械电子工程</td><td>上海临港，机电方向B+，城市资源好</td><td>招生少，专业和学校行业偏航运，需要确认是否接受</td><td>待核后可少量放稳妥</td></tr><tr><td>南通大学</td><td>物联网工程/通信工程</td><td>长三角；部分专业B/B+</td><td>校区启东/啬园切换，城市和学校工科平台不如重邮/成信</td><td>可作保底扩展</td></tr><tr><td>北京联合大学</td><td>计算机科学与技术</td><td>北京城市，位次安全性较高</td><td>学校层级和专业平台一般，评级来源需复核</td><td>只作保底扩展</td></tr><tr><td>重庆交通大学</td><td>机械设计制造及其自动化</td><td>重庆本地，位次安全</td><td>学校强项偏交通土木，非电子信息主线</td><td>只在保底不足时考虑</td></tr></tbody></table></div></details>
   </section>
 
   <section id="order">
@@ -337,5 +679,27 @@
 <footer>
   <p>生成日期：2026-06-28。用途：家庭志愿讨论与正式填报前复核，不替代重庆志愿填报系统最终专业计划和投档规则。</p>
 </footer>
+<script>
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('#tier-cards .choice-card');
+  const cardCount = document.querySelector('.card-count');
+  function applyFilter(filter) {
+    let visible = 0;
+    cards.forEach((card) => {
+      const show = filter === '全部' || card.dataset.tier === filter;
+      card.classList.toggle('is-hidden', !show);
+      if (show) visible += 1;
+    });
+    cardCount.textContent = filter === '全部' ? `当前显示全部 ${visible} 条` : `当前显示「${filter}」${visible} 条`;
+  }
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      filterButtons.forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      applyFilter(button.dataset.filter);
+    });
+  });
+  applyFilter('全部');
+</script>
 </body>
 </html>

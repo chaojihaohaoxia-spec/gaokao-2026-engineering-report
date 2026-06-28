@@ -507,21 +507,87 @@ def candidate_table(items: list[Candidate]) -> str:
     )
 
 
-def candidate_notes(items: list[Candidate]) -> str:
+def candidate_cards(items: list[Candidate], data_tier: str | None = None) -> str:
     blocks = []
     for item in items:
+        tier = data_tier or item.tier
         blocks.append(
             f"""
-            <article class="note">
-              <h4>{escape(item.tier)} {item.order}. {escape(item.school)}｜{escape(item.major)}</h4>
-              <p><b>为什么值得放：</b>{escape(item.reason)}</p>
-              <p><b>录取机会来自：</b>{escape(item.ranks)}，结合考生18162位判断。</p>
-              <p><b>失败/波动风险：</b>{escape(item.risk)}</p>
-              <p><b>是否值得牺牲专业冲学校：</b>{escape(item.final)}。</p>
+            <article class="choice-card" data-tier="{escape(tier)}">
+              <div class="card-top">
+                <span class="pill">{escape(item.tier)} {item.order}</span>
+                <span class="score">{item.score}</span>
+              </div>
+              <h4>{escape(item.school)}｜{escape(item.major)}</h4>
+              <p class="campus">{escape(item.city_campus)}</p>
+              <dl>
+                <dt>位次</dt><dd>{escape(item.ranks)}</dd>
+                <dt>评级/排名</dt><dd>{escape(item.strength)}<br>{links(item.source_keys)}</dd>
+                <dt>推荐逻辑</dt><dd>{escape(item.reason)}</dd>
+                <dt>风险</dt><dd>{escape(item.risk)}</dd>
+              </dl>
             </article>
             """
         )
-    return '<div class="notes">' + "".join(blocks) + "</div>"
+    return '<div class="card-grid">' + "".join(blocks) + "</div>"
+
+
+def pending_cards() -> str:
+    blocks = []
+    for school, major, value, missing, advice in pending:
+        blocks.append(
+            f"""
+            <article class="choice-card" data-tier="待核">
+              <div class="card-top"><span class="pill pending">待核</span></div>
+              <h4>{escape(school)}｜{escape(major)}</h4>
+              <dl>
+                <dt>保留价值</dt><dd>{escape(value)}</dd>
+                <dt>缺什么</dt><dd>{escape(missing)}</dd>
+                <dt>处理</dt><dd>{escape(advice)}</dd>
+              </dl>
+            </article>
+            """
+        )
+    return "".join(blocks)
+
+
+def avoid_cards() -> str:
+    blocks = []
+    for school, major, looks_good, problem, exclude in not_recommended:
+        blocks.append(
+            f"""
+            <article class="choice-card" data-tier="谨慎">
+              <div class="card-top"><span class="pill avoid">谨慎/不建议</span></div>
+              <h4>{escape(school)}｜{escape(major)}</h4>
+              <dl>
+                <dt>看起来能选</dt><dd>{escape(looks_good)}</dd>
+                <dt>问题</dt><dd>{escape(problem)}</dd>
+                <dt>结论</dt><dd>{escape(exclude)}</dd>
+              </dl>
+            </article>
+            """
+        )
+    return "".join(blocks)
+
+
+def tier_browser() -> str:
+    cards = candidate_cards(reach) + candidate_cards(stable) + candidate_cards(safety) + f'<div class="card-grid">{pending_cards()}{avoid_cards()}</div>'
+    return f"""
+    <section id="tier-browser" class="tier-browser">
+      <h2>快速分级浏览</h2>
+      <p>先用按钮看分层，再决定是否展开后面的详细表格。默认显示全部推荐，点“冲刺/稳妥/保底/待核/谨慎”可以只看对应类别。</p>
+      <div class="filter-bar" role="group" aria-label="志愿分级筛选">
+        <button type="button" class="filter-btn active" data-filter="全部">全部</button>
+        <button type="button" class="filter-btn" data-filter="冲刺">冲刺</button>
+        <button type="button" class="filter-btn" data-filter="稳妥">稳妥</button>
+        <button type="button" class="filter-btn" data-filter="保底">保底</button>
+        <button type="button" class="filter-btn" data-filter="待核">待核</button>
+        <button type="button" class="filter-btn" data-filter="谨慎">谨慎/不建议</button>
+      </div>
+      <div class="card-count" aria-live="polite">当前显示全部条目</div>
+      <div id="tier-cards" class="tier-cards">{cards}</div>
+    </section>
+    """
 
 
 def render() -> str:
@@ -564,6 +630,7 @@ def render() -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
   <title>重庆2026物理类586分工科志愿复核报告</title>
   <style>
     :root {{
@@ -579,13 +646,14 @@ def render() -> str:
       --green: #26734d;
     }}
     * {{ box-sizing: border-box; }}
-    body {{ margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.65; }}
+    html {{ scroll-padding-top: 72px; }}
+    body {{ margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.65; overflow-x: hidden; }}
     a {{ color: var(--blue); text-decoration: none; }}
     header {{ background: #0f172a; color: #fff; padding: 44px min(6vw, 72px) 32px; }}
     header h1 {{ margin: 0 0 12px; font-size: clamp(28px, 4vw, 48px); letter-spacing: 0; }}
     header p {{ margin: 6px 0; color: #dbe7ff; max-width: 1040px; }}
-    nav {{ position: sticky; top: 0; z-index: 2; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); padding: 10px min(6vw, 72px); display: flex; gap: 14px; overflow-x: auto; }}
-    nav a {{ white-space: nowrap; font-size: 14px; color: #1f2937; }}
+    nav {{ position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); padding: 10px min(6vw, 72px); display: flex; gap: 10px; overflow-x: auto; box-shadow: 0 8px 18px rgba(15,23,42,.06); }}
+    nav a {{ white-space: nowrap; font-size: 14px; color: #1f2937; padding: 4px 8px; }}
     main {{ padding: 0; }}
     section {{ padding: 34px min(6vw, 72px); border-bottom: 1px solid var(--line); background: var(--paper); }}
     section:nth-of-type(even) {{ background: #f9fbff; }}
@@ -601,25 +669,61 @@ def render() -> str:
     .callout {{ border-left: 5px solid var(--red); background: #fff7f6; padding: 14px 16px; margin: 16px 0; }}
     .ok {{ border-left-color: var(--green); background: #f2fbf6; }}
     .warn {{ border-left-color: var(--amber); background: #fff8ed; }}
-    .table-wrap {{ overflow-x: auto; margin: 16px 0; border: 1px solid var(--line); background: #fff; }}
+    .tier-browser {{ background: #f5f8fd; }}
+    .filter-bar {{ display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 10px; max-width: 100%; }}
+    .filter-btn {{ appearance: none; border: 1px solid #b9c6d8; background: #fff; color: #102a56; padding: 9px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; white-space: nowrap; }}
+    .filter-btn:hover {{ border-color: var(--blue); }}
+    .filter-btn.active {{ background: var(--blue); border-color: var(--blue); color: #fff; }}
+    .card-count {{ color: var(--muted); font-size: 14px; margin-bottom: 12px; }}
+    .tier-cards {{ display: grid; gap: 16px; }}
+    .card-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }}
+    .choice-card {{ border: 1px solid var(--line); border-left: 5px solid var(--blue); background: #fff; padding: 14px; border-radius: 8px; min-width: 0; overflow-wrap: anywhere; }}
+    .choice-card[data-tier="稳妥"] {{ border-left-color: var(--green); }}
+    .choice-card[data-tier="保底"] {{ border-left-color: var(--teal); }}
+    .choice-card[data-tier="待核"] {{ border-left-color: var(--amber); }}
+    .choice-card[data-tier="谨慎"] {{ border-left-color: var(--red); }}
+    .choice-card.is-hidden {{ display: none; }}
+    .card-top {{ display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }}
+    .pill {{ display: inline-flex; align-items: center; min-height: 26px; padding: 2px 9px; border-radius: 999px; background: #e8f0ff; color: #17427d; font-size: 13px; font-weight: 800; }}
+    .pill.pending {{ background: #fff4d6; color: #8a4b00; }}
+    .pill.avoid {{ background: #ffe8e4; color: #9b1c13; }}
+    .campus {{ color: var(--muted); margin-top: -4px; }}
+    dl {{ display: grid; grid-template-columns: 76px 1fr; gap: 6px 10px; margin: 10px 0 0; }}
+    dt {{ color: var(--muted); font-weight: 800; }}
+    dd {{ margin: 0; min-width: 0; overflow-wrap: anywhere; }}
+    .detail-table {{ margin-top: 14px; }}
+    .detail-table summary {{ cursor: pointer; font-weight: 800; color: #123c73; padding: 10px 0; }}
+    .table-wrap {{ overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); background: #fff; max-width: 100%; width: 100%; }}
     table {{ width: 100%; border-collapse: collapse; min-width: 900px; }}
-    .wide table {{ min-width: 1500px; }}
-    th, td {{ border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: 10px 11px; vertical-align: top; font-size: 14px; }}
-    th {{ position: sticky; top: 41px; background: #edf3ff; z-index: 1; text-align: left; color: #102a56; }}
+    .wide table {{ min-width: 1280px; }}
+    th, td {{ border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: 10px 11px; vertical-align: top; font-size: 14px; overflow-wrap: anywhere; }}
+    th {{ background: #edf3ff; text-align: left; color: #102a56; }}
     tr:last-child td {{ border-bottom: 0; }}
     td:last-child, th:last-child {{ border-right: 0; }}
     .score {{ font-size: 22px; font-weight: 800; color: var(--blue); }}
     .tag {{ display: inline-block; margin-top: 4px; padding: 2px 8px; background: #e8f0ff; color: #1d4f91; border-radius: 999px; font-size: 12px; }}
-    .notes {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 14px; }}
-    .note {{ border: 1px solid var(--line); background: #fff; padding: 14px; }}
-    .note p {{ font-size: 14px; margin: 6px 0; }}
     .ranking {{ display: grid; grid-template-columns: 1fr; gap: 8px; margin: 16px 0; max-width: 950px; }}
     .bar {{ display: grid; grid-template-columns: 160px 1fr 82px; align-items: center; gap: 10px; font-size: 14px; }}
-    .bar div:nth-child(2) {{ height: 14px; background: #e5e7eb; position: relative; }}
-    .bar i {{ display: block; height: 14px; background: var(--teal); }}
+    .bar div:nth-child(2) {{ height: 14px; background: #e5e7eb; position: relative; overflow: hidden; }}
+    .bar i {{ display: block; height: 14px; background: var(--teal); max-width: 100%; }}
     .small {{ color: var(--muted); font-size: 13px; }}
     .cols {{ columns: 2 360px; column-gap: 28px; }}
     footer {{ padding: 28px min(6vw, 72px); background: #0f172a; color: #dbe7ff; }}
+    @media (max-width: 720px) {{
+      header {{ padding: 28px 18px 22px; }}
+      section {{ padding: 26px 16px; }}
+      nav {{ padding: 8px 12px; }}
+      h2 {{ font-size: 23px; }}
+      .card-grid {{ grid-template-columns: 1fr; }}
+      .choice-card {{ padding: 13px; }}
+      .filter-bar {{ gap: 8px; }}
+      .filter-btn {{ flex: 1 1 calc(50% - 8px); padding: 9px 10px; }}
+      dl {{ grid-template-columns: 1fr; gap: 2px; }}
+      dt {{ margin-top: 8px; }}
+      .bar {{ grid-template-columns: 110px 1fr 62px; }}
+      table {{ min-width: 680px; }}
+      .wide table {{ min-width: 960px; }}
+    }}
   </style>
 </head>
 <body>
@@ -629,7 +733,7 @@ def render() -> str:
   <p>考生：重庆物理类，586分，物理/化学/生物，男生，只考虑工科，不考虑中外合作、文社经管法外语教育艺术等方向。</p>
 </header>
 <nav>
-  <a href="#conclusion">结论</a><a href="#data">数据核验</a><a href="#excel">Excel审查</a><a href="#priority">专业优先级</a>
+  <a href="#conclusion">结论</a><a href="#tier-browser">分级按钮</a><a href="#data">数据核验</a><a href="#excel">Excel审查</a><a href="#priority">专业优先级</a>
   <a href="#reach">冲刺</a><a href="#stable">稳妥</a><a href="#safety">保底</a><a href="#avoid">谨慎</a><a href="#order">排序</a><a href="#summary">简单版</a>
 </nav>
 <main>
@@ -646,6 +750,8 @@ def render() -> str:
     <div class="callout warn"><b>最大风险：</b>热门信息类专业继续上涨，小计划专业波动大；机构表里不少“学校好但专业不适合”的选项要剔除。</div>
     <p>策略上，前段少量冲真正值得的强工科，中段集中放专业和城市都匹配的重邮/成信/浙江理工，后段用重庆理工的强应用工科做保底。不要拿材料、化工、过程装备、交通、医学信息工程、财经类数据科学去换一个看起来更响的学校名字。</p>
   </section>
+
+  {tier_browser()}
 
   <section id="data">
     <h2>2. 数据核验结果</h2>
@@ -684,30 +790,27 @@ def render() -> str:
   <section id="reach">
     <h2>5. 冲刺志愿清单</h2>
     <p>冲刺只放“冲上了值得读”的专业，不用冷门工科冲学校名气。</p>
-    {candidate_table(reach)}
-    {candidate_notes(reach)}
+    <details class="detail-table"><summary>展开冲刺详细表格</summary>{candidate_table(reach)}</details>
   </section>
 
   <section id="stable">
     <h2>6. 稳妥志愿清单</h2>
     <p>稳妥部分是本方案核心：录取位次贴近18162，且专业、城市、就业逻辑较均衡。</p>
-    {candidate_table(stable)}
-    {candidate_notes(stable)}
+    <details class="detail-table"><summary>展开稳妥详细表格</summary>{candidate_table(stable)}</details>
   </section>
 
   <section id="safety">
     <h2>7. 保底志愿清单</h2>
     <p>保底不是乱保；这里仍然只放能接受、就业逻辑清楚、评级达到B以上或有强应用背景的工科方向。</p>
-    {candidate_table(safety)}
-    {candidate_notes(safety)}
+    <details class="detail-table"><summary>展开保底详细表格</summary>{candidate_table(safety)}</details>
   </section>
 
   <section id="avoid">
     <h2>8. 不建议选择 / 需要谨慎的学校专业</h2>
-    {no_table}
+    <details class="detail-table"><summary>展开谨慎/不建议表格</summary>{no_table}</details>
     <h3>待核扩展池</h3>
     <p>这些不是否定，而是当前公开数据还不足以直接放进最终主表。等重庆志愿系统开放后，应逐项核2026计划、校区、专业评级和近三年位次。</p>
-    {pending_table}
+    <details class="detail-table"><summary>展开待核扩展池表格</summary>{pending_table}</details>
   </section>
 
   <section id="order">
@@ -738,6 +841,28 @@ def render() -> str:
 <footer>
   <p>生成日期：2026-06-28。用途：家庭志愿讨论与正式填报前复核，不替代重庆志愿填报系统最终专业计划和投档规则。</p>
 </footer>
+<script>
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('#tier-cards .choice-card');
+  const cardCount = document.querySelector('.card-count');
+  function applyFilter(filter) {{
+    let visible = 0;
+    cards.forEach((card) => {{
+      const show = filter === '全部' || card.dataset.tier === filter;
+      card.classList.toggle('is-hidden', !show);
+      if (show) visible += 1;
+    }});
+    cardCount.textContent = filter === '全部' ? `当前显示全部 ${{visible}} 条` : `当前显示「${{filter}}」${{visible}} 条`;
+  }}
+  filterButtons.forEach((button) => {{
+    button.addEventListener('click', () => {{
+      filterButtons.forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      applyFilter(button.dataset.filter);
+    }});
+  }});
+  applyFilter('全部');
+</script>
 </body>
 </html>"""
 
